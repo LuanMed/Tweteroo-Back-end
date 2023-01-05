@@ -3,10 +3,10 @@ import cors from "cors";
 import bodyParser from "body-parser";
 
 let users = [];
-let tweets = {a:{b:"b"},c:"c",d:"d"}
+let tweets = [];
 
 const app = express();
-app.use( bodyParser.json() );
+app.use(bodyParser.json());
 
 app.use(cors());
 
@@ -18,7 +18,13 @@ app.post("/sign-up", (req, res) => {
 });
 
 app.post("/tweets", (req, res) => {
-    res.send('Hello Cold World');
+    if (users.find((item) => req.body.username !== item.username)) {
+        return res.send('UNAUTHORIZED');
+    } else {
+        tweets.push(req.body);
+        console.log(tweets);
+        res.send('OK');
+    }
 });
 
 app.get("/tweets", (req, res) => {
