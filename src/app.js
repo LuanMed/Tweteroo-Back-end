@@ -10,9 +10,7 @@ app.use(express.json());
 app.use(cors());
 
 app.post("/sign-up", (req, res) => {
-    console.log(req.body);
     users.push(req.body);
-    console.log(users);
     res.send('OK');
 });
 
@@ -26,9 +24,7 @@ app.post("/tweets", (req, res) => {
         }
         const newTweet = req.body;
         newTweet.avatar = avatar;
-        console.log(avatar);
         tweets.push(newTweet);
-        console.log(tweets);
         res.send('OK');
         
     } else {
@@ -42,6 +38,20 @@ app.get("/tweets", (req, res) => {
         return res.send(lastTen);
     }
     res.send(tweets);
+});
+
+app.get("/tweets/:username", (req, res) => {
+    const {username} = req.params;
+    console.log(username);
+    let tweetsUser = [];
+
+    for (let i = 0; i < tweets.length; i++){
+        if (tweets[i].username === username){
+            tweetsUser.push(tweets[i]);
+        }
+    }
+    console.log(tweetsUser);
+    res.send(tweetsUser);
 });
 
 app.listen(5000, () => {
