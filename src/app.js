@@ -9,9 +9,13 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+app.listen(5000, () => {
+    console.log("Servidor rodando")
+});
+
 app.post("/sign-up", (req, res) => {
     users.push(req.body);
-    res.send('OK');
+    res.status(201).send('OK');
 });
 
 app.post("/tweets", (req, res) => {
@@ -25,10 +29,10 @@ app.post("/tweets", (req, res) => {
         const newTweet = req.body;
         newTweet.avatar = avatar;
         tweets.push(newTweet);
-        res.send('OK');
+        res.status(201).send('OK');
         
     } else {
-        return res.send('UNAUTHORIZED');
+        return res.status(401).send('UNAUTHORIZED');
     }
 });
 
@@ -52,8 +56,4 @@ app.get("/tweets/:username", (req, res) => {
     }
     console.log(tweetsUser);
     res.send(tweetsUser);
-});
-
-app.listen(5000, () => {
-    console.log("Servidor rodando")
 });
