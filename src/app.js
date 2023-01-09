@@ -14,20 +14,34 @@ app.listen(5000, () => {
 });
 
 app.post("/sign-up", (req, res) => {
-    users.push(req.body);
+    const newUser = req.body;
+
+    if (!newUser.username || !newUser.avatar){
+        return res.status(400).send('Todos os campos são obrigatórios!')
+    }
+
+    users.push(newUser);
     res.status(201).send('OK');
 });
 
 app.post("/tweets", (req, res) => {
-    if (users.find((item) => req.body.username === item.username)) {
-        let avatar = '';
+    const newTweet = req.body;
+    const { user } = req.headers;
+
+    if (!user || !newTweet.tweet){
+        return res.status(400).send('Todos os campos são obrigatórios!')
+    }
+
+    if (users.find((item) => user === item.username)) {
+        let avatar, username = '';
         for (let i = 0; i < users.length; i++){
-            if (users[i].username === req.body.username){
+            if (users[i].username === user){
                 avatar = users[i].avatar;
+                username = users[i].username;
             }
         }
-        const newTweet = req.body;
         newTweet.avatar = avatar;
+        newTweet.username = username;
         tweets.push(newTweet);
         res.status(201).send('OK');
         
@@ -37,11 +51,16 @@ app.post("/tweets", (req, res) => {
 });
 
 app.get("/tweets", (req, res) => {
+    const { page } = req.query;
+    console.log(tweets)
+    const lastTweets = tweets.reverse();
+
     if (tweets.length > 10){
         const lastTen = tweets.slice(tweets.length-10);
         return res.send(lastTen);
     }
-    res.send(tweets);
+    res.send(lastTweets);
+    console.log(tweets);
 });
 
 app.get("/tweets/:username", (req, res) => {
