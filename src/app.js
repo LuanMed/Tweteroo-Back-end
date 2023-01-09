@@ -14,7 +14,7 @@ app.listen(5000);
 app.post("/sign-up", (req, res) => {
     const newUser = req.body;
 
-    if (!newUser.username || !newUser.avatar || typeof (newUser.avatar) !== 'string') {
+    if (!newUser.username || !newUser.avatar || typeof (newUser.avatar) !== 'string' || typeof (newUser.username) !== 'string'){
         return res.status(400).send('Todos os campos são obrigatórios!')
     }
 
